@@ -1,0 +1,110 @@
+version: "3.9"
+services:
+  mysql:
+    container_name: dln-mysql
+    build:
+      context: .
+      dockerfile: mysql/Dockerfile
+    command: --default_authentication-plugin=mysql_native_password
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - ./dln-mysql-data:/var/lib/mysql
+      - ./dln-mysql-backups:/var/mysql/backups
+    networks:
+      - internal
+
+  drupal:
+    build:
+      context: .
+      dockerfile: drupal/Dockerfile
+    container_name: dln-drupal
+    depends_on:
+      - mysql
+    restart: unless-stopped
+    networks:
+      - internal
+      - external
+    volumes:
+      - dln-drupal:/opt/drupal
+      - dln-drupal-data:/var/www/html
+      - ./dln-drupal-sites:/var/www/html/sites
+      - ./dln-drupal-modules:/var/www/html/modules
+      - ./dln-drupal-themes:/var/www/html/themes
+
+  webserver:
+    image: nginx:1.21.3
+    container_name: dln-webserver
+    depends_on:
+      - drupal
+    restart: unless-stopped
+    ports:
+      - 80:80
+    extra_hosts:
+      - "dln.swclimatehub.info:0.0.0.0"
+      - "localhost:0.0.0.0"
+    volumes:
+      - dln-drupal-data:/var/www/html
+      - ./nginx:/etc/nginx/conf.d
+#      - dln-certbot-etc:/etc/letsencrypt
+    networks:
+      - external
+
+  composer:
+    image: composer:2.2.6
+    container_name: dln-init-drupal
+    command: ["sh", "/opt/drupal/init-drupal.sh"]
+    depends_on:
+      - drupal
+    volumes:
+      - dln-drupal:/opt/drupal
+#      - dln-drupal-data:/app
+
+#  certbot:
+#    depends_on:
+#      - webserver
+#    image: certbot/certbot
+#    container_name: certbot
+#    volumes:
+#      - dln-certbot-etc:/etc/letsencrypt
+#      - dln-drupal-data:/var/www/html
+#    command: certonly --webroot --webroot-path=/var/www/html --email kramsey@jornada-vmail.nmsu.edu --agree-tos --no-eff-email --staging -d example.com -d dln.swclimatehub.info
+#    command: certonly --dry-run --webroot --webroot-path=/var/www/html --email kramsey@jornada-vmail.nmsu.edu --agree-tos --no-eff-email --staging -d example.com -d dln.swclimatehub.info
+
+  phpmyadmin:
+    depends_on:
+      - mysql
+    image: phpmyadmin:5.1.1-apache
+    container_name: dln-phpmyadmin
+    extra_hosts:
+      - "dln.swclimatehub.info:0.0.0.0"
+      - "localhost:0.0.0.0"
+    networks:
+      - internal
+      - external
+    ports:
+      - 81:80
+    restart: unless-stopped
+    environment:
+      PMA_HOST: mysql
+    volumes:
+      - dln-mysql-backups:/var/mysql/backups
+
+networks:
+  external:
+    driver: bridge
+  internal:
+    driver: bridge
+
+volumes:
+# persistent drupal data
+  dln-drupal:
+  dln-drupal-data:
+  dln-drupal-sites:
+  dln-drupal-modules:
+  dln-drupal-themes:
+# persistent mysql data
+  dln-mysql-data:
+  dln-mysql-backups:
+# persistent certbot data
+#  dln-certbot-etc:
