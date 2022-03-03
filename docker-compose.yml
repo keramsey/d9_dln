@@ -1,7 +1,7 @@
 version: "3.9"
 services:
   mysql:
-    container_name: dln-mysql
+    container_name: ${CONTAINER_PREFIX}-mysql
     build:
       context: .
       dockerfile: mysql/Dockerfile
@@ -9,8 +9,7 @@ services:
     restart: unless-stopped
     env_file: .env
     volumes:
-      - ./dln-mysql-data:/var/lib/mysql
-      - ./dln-mysql-backups:/var/mysql/backups
+      - src-${CONTAINER_PREFIX}-mysql:/var/mysql/backups
     networks:
       - internal
 
@@ -18,7 +17,7 @@ services:
     build:
       context: .
       dockerfile: drupal/Dockerfile
-    container_name: dln-drupal
+    container_name: ${CONTAINER_PREFIX}-drupal
     depends_on:
       - mysql
     restart: unless-stopped
@@ -26,39 +25,65 @@ services:
       - internal
       - external
     volumes:
-      - dln-drupal:/opt/drupal
-      - dln-drupal-data:/var/www/html
-      - ./dln-drupal-sites:/var/www/html/sites
-      - ./dln-drupal-modules:/var/www/html/modules
-      - ./dln-drupal-themes:/var/www/html/themes
+      - ${CONTAINER_PREFIX}-drupal:/opt/drupal
+      - ${CONTAINER_PREFIX}-drupal-data:/var/www/html
+      - ./src-${CONTAINER_PREFIX}-mysql:/var/mysql/backups
+      - ./src-${CONTAINER_PREFIX}-drupal-sites:/var/www/html/sites
+      - ./src-${CONTAINER_PREFIX}-drupal-modules:/var/www/html/modules
 
   webserver:
     image: nginx:1.21.3
-    container_name: dln-webserver
+    container_name: ${CONTAINER_PREFIX}-webserver
     depends_on:
       - drupal
     restart: unless-stopped
     ports:
       - 80:80
     extra_hosts:
-      - "dln.swclimatehub.info:0.0.0.0"
+      - "${SITE_DOMAIN}:0.0.0.0"
       - "localhost:0.0.0.0"
     volumes:
-      - dln-drupal-data:/var/www/html
+      - ${CONTAINER_PREFIX}-drupal-data:/var/www/html
       - ./nginx:/etc/nginx/conf.d
-#      - dln-certbot-etc:/etc/letsencrypt
+#      - ${CONTAINER_PREFIX}-certbot-etc:/etc/letsencrypt
     networks:
       - external
 
-  composer:
-    image: composer:2.2.6
-    container_name: dln-init-drupal
-    command: ["sh", "/opt/drupal/init-drupal.sh"]
+  vsftpd:
+    image: fauria/vsftpd:latest
+    container_name: ${CONTAINER_PREFIX}-vsftpd
     depends_on:
       - drupal
+    restart: unless-stopped
+    env_file:
+      - .env
+    extra_hosts:
+      - "vsftpd:0.0.0.0"
     volumes:
-      - dln-drupal:/opt/drupal
-#      - dln-drupal-data:/app
+      - /var/app/ftp:/home/vsftpd
+      - /var/log/ftp:/var/log/vsftpd
+    networks:
+      - internal
+#      - external
+
+  composer:
+    image: composer:2.2.6
+    container_name: ${CONTAINER_PREFIX}-composer
+    depends_on:
+      - drupal
+    working_dir: /opt/drupal
+    command: ["bash", "update-composer.sh"]
+    volumes:
+      - ${CONTAINER_PREFIX}-drupal:/opt/drupal
+
+#  drush:
+#    container-name: ${CONTAINER_PREFIX}-drush
+#    command: ["sh", "/opt/drupal/update-drush.sh"]
+#    depends_on:
+#      - drupal
+#    volumes:
+#      - ${CONTAINER_PREFIX}-drupal:/opt/drupal
+#    working_dir: /opt/drupal
 
 #  certbot:
 #    depends_on:
@@ -66,18 +91,18 @@ services:
 #    image: certbot/certbot
 #    container_name: certbot
 #    volumes:
-#      - dln-certbot-etc:/etc/letsencrypt
-#      - dln-drupal-data:/var/www/html
-#    command: certonly --webroot --webroot-path=/var/www/html --email kramsey@jornada-vmail.nmsu.edu --agree-tos --no-eff-email --staging -d example.com -d dln.swclimatehub.info
-#    command: certonly --dry-run --webroot --webroot-path=/var/www/html --email kramsey@jornada-vmail.nmsu.edu --agree-tos --no-eff-email --staging -d example.com -d dln.swclimatehub.info
+#      - ${CONTAINER_PREFIX}-certbot-etc:/etc/letsencrypt
+#      - ${CONTAINER_PREFIX}-drupal-data:/var/www/html
+#    command: certonly --webroot --webroot-path=/var/www/html --email kramsey@jornada-vmail.nmsu.edu --agree-tos --no-eff-email --staging -d example.com -d ${SITE_DOMAIN}
+#    command: certonly --dry-run --webroot --webroot-path=/var/www/html --email kramsey@jornada-vmail.nmsu.edu --agree-tos --no-eff-email --staging -d example.com -d ${SITE_DOMAIN}
 
   phpmyadmin:
     depends_on:
       - mysql
     image: phpmyadmin:5.1.1-apache
-    container_name: dln-phpmyadmin
+    container_name: ${CONTAINER_PREFIX}-phpmyadmin
     extra_hosts:
-      - "dln.swclimatehub.info:0.0.0.0"
+      - "${SITE_DOMAIN}:0.0.0.0"
       - "localhost:0.0.0.0"
     networks:
       - internal
@@ -88,7 +113,7 @@ services:
     environment:
       PMA_HOST: mysql
     volumes:
-      - dln-mysql-backups:/var/mysql/backups
+      - src-${CONTAINER_PREFIX}-mysql:/var/mysql/backups
 
 networks:
   external:
@@ -97,14 +122,8 @@ networks:
     driver: bridge
 
 volumes:
-# persistent drupal data
   dln-drupal:
   dln-drupal-data:
-  dln-drupal-sites:
-  dln-drupal-modules:
-  dln-drupal-themes:
-# persistent mysql data
-  dln-mysql-data:
-  dln-mysql-backups:
-# persistent certbot data
-#  dln-certbot-etc:
+  src-dln-drupal-modules:
+  src-dln-drupal-sites:
+  src-dln-mysql:

@@ -1,6 +1,3 @@
 .env
-dln-drupal-sites/*
-dln-drupal-modules/*
-dln-drupal-themes/*
-dln-mysql-data/*
-dln-mysql-backup/*
+src-*
+trash

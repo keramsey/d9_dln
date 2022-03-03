@@ -1,15 +1,25 @@
 FROM drupal:9.3.6-php8.0-apache-bullseye
 
+# Install system packages
+# MySQL client is needed for drush to export database dumps
 RUN apt-get update \
-  && apt-get install apt-file -y
-
-RUN apt-file update \
   && apt-get install zip -y \
-  && apt install git -y
+  && apt-get install default-mysql-client -y
 
-# Copy script needed by dln-init-drupal container
-COPY drupal/init-drupal.sh /opt/drupal
+# Copy script used to update drupal using composer
+COPY ./drupal/update-composer.sh /opt/drupal
 
-#ENTRYPOINT [ "sh", "/init-drupal.sh" ]
-#ADD ./drupal/init-drupal.sh /docker-entrypoint-initdb.d
-#CMD ["tail","-f", "/dev/null"]
+# Copy script used to update drupal database using drush
+COPY ./drupal/update-drush.sh /opt/drupal
+
+# Copy script used to fix drupal filesystem permissions
+COPY ./drupal/fix-permissions.sh /opt/drupal/web
+
+# Update drupal database using drush
+#RUN /opt/drupal/update-drush.sh
+
+# Set filesystem permissions for sites folder and contents
+RUN /opt/drupal/web/fix-permissions.sh
+
+# Alternate entrypoint script for debugging container that will keep container running
+#ENTRYPOINT ["tail", "-f", "/dev/null"]
