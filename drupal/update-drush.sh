@@ -42,6 +42,8 @@ drush -y updb
 drush -y theme-enable dln_drupal8_zymphonies_theme
 # Set default theme to dln_drupal8_zymphonies_theme theme (subtheme)
 drush -y config-set system.theme default dln_drupal8_zymphonies_theme
+# Update drupal database (after setting default theme, otherwise white screen on Appearance admin page)
+drush -y updb
 # Rebuild drupal cache
 drush cr
 # Export Drupal database to compressed file (--gzip appends .gz to file extension)
