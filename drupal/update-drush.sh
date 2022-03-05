@@ -48,7 +48,7 @@ drush -y updb
 drush cr
 # Export Drupal database to compressed file (--gzip appends .gz to file extension)
 # which updates database script used to populate mysql container
-drush -y sql-dump --gzip --result-file=/var/mysql/backups/dlnswclimatehub.sql --extra-dump=--no-tablespaces
+drush -y sql-dump --gzip --result-file=/var/mysql/backups/latest/dlnswclimatehub.sql --extra-dump=--no-tablespaces
 # Clear drush cache
 drush cc drush
 # Change directory to previous state

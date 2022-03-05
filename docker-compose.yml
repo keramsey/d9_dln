@@ -1,15 +1,17 @@
 version: "3.9"
 services:
   mysql:
+    image: mysql:8.0.28
+#    security_opt:
+#      - seccomp:unconfined
     container_name: ${CONTAINER_PREFIX}-mysql
-    build:
-      context: .
-      dockerfile: mysql/Dockerfile
     command: --default_authentication-plugin=mysql_native_password
     restart: unless-stopped
+    extra_hosts:
+      - "mysql:0.0.0.0"
     env_file: .env
     volumes:
-      - src-${CONTAINER_PREFIX}-mysql:/var/mysql/backups
+      - ./src-${CONTAINER_PREFIX}-mysql:/docker-entrypoint-initdb.d
     networks:
       - internal
 
@@ -27,9 +29,8 @@ services:
     volumes:
       - ${CONTAINER_PREFIX}-drupal:/opt/drupal
       - ${CONTAINER_PREFIX}-drupal-data:/var/www/html
-      - ./src-${CONTAINER_PREFIX}-mysql:/var/mysql/backups
+      - ./src-${CONTAINER_PREFIX}-mysql:/var/mysql/backups/latest
       - ./src-${CONTAINER_PREFIX}-drupal-sites:/var/www/html/sites
-      - ./src-${CONTAINER_PREFIX}-drupal-modules:/var/www/html/modules
 
   webserver:
     image: nginx:1.21.3
@@ -112,8 +113,6 @@ services:
     restart: unless-stopped
     environment:
       PMA_HOST: mysql
-    volumes:
-      - src-${CONTAINER_PREFIX}-mysql:/var/mysql/backups
 
 networks:
   external:
@@ -124,6 +123,4 @@ networks:
 volumes:
   dln-drupal:
   dln-drupal-data:
-  src-dln-drupal-modules:
   src-dln-drupal-sites:
-  src-dln-mysql:

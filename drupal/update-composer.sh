@@ -36,6 +36,7 @@ composer require -W drupal/superfish:^1.4 --ignore-platform-req=ext-gd --no-upda
 composer require -W drupal/taxonomy_manager:^2.0 --ignore-platform-req=ext-gd --no-update -q
 composer require -W drupal/tb_megamenu:^1.6 --ignore-platform-req=ext-gd --no-update -q
 composer require -W drupal/token:^1.10 --ignore-platform-req=ext-gd --no-update -q
+#composer require -W drupal/webform:^6.0 --ignore-platform-req=ext-gd --no-update -q
 composer update --ignore-platform-req=ext-gd
 # Clear composer cache
 composer clearcache
