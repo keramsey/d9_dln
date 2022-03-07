@@ -1,7 +1,7 @@
 FROM drupal:9.3.7-php8.0-apache-bullseye
 
 # Install system packages
-# MySQL client is needed for drush to export database dumps
+#  - MySQL client is needed for drush to export database dumps
 RUN apt-get update \
   && apt-get install zip -y \
   && apt-get install default-mysql-client -y
@@ -14,9 +14,6 @@ COPY ./drupal/update-drush.sh /opt/drupal
 
 # Copy script used to fix drupal filesystem permissions
 COPY ./drupal/fix-permissions.sh /opt/drupal/web
-
-# Update drupal database using drush
-#RUN /opt/drupal/update-drush.sh
 
 # Set filesystem permissions for sites folder and contents
 RUN /opt/drupal/web/fix-permissions.sh
