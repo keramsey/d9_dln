@@ -29,7 +29,7 @@ services:
     volumes:
       - ${CONTAINER_PREFIX}-drupal:/opt/drupal
       - ${CONTAINER_PREFIX}-drupal-data:/var/www/html
-      - ./src-${CONTAINER_PREFIX}-mysql:/var/mysql/backups/latest
+      - ./src-${CONTAINER_PREFIX}-mysql:/var/mysql/backups
       - ./src-${CONTAINER_PREFIX}-drupal-sites:/var/www/html/sites
 
   webserver:
