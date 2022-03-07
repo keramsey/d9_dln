@@ -77,15 +77,6 @@ services:
     volumes:
       - ${CONTAINER_PREFIX}-drupal:/opt/drupal
 
-#  drush:
-#    container-name: ${CONTAINER_PREFIX}-drush
-#    command: ["sh", "/opt/drupal/update-drush.sh"]
-#    depends_on:
-#      - drupal
-#    volumes:
-#      - ${CONTAINER_PREFIX}-drupal:/opt/drupal
-#    working_dir: /opt/drupal
-
 #  certbot:
 #    depends_on:
 #      - webserver
