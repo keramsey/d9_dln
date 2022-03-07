@@ -2,8 +2,8 @@ version: "3.9"
 services:
   mysql:
     image: mysql:8.0.28
-#    security_opt:
-#      - seccomp:unconfined
+    security_opt:
+      - seccomp:unconfined
     container_name: ${CONTAINER_PREFIX}-mysql
     command: --default_authentication-plugin=mysql_native_password
     restart: unless-stopped
