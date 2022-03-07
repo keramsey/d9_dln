@@ -47,11 +47,11 @@ drush state:set system.maintenance_mode 1
 # Export Drupal database to compressed file (--gzip appends .gz to file extension)
 echo "Backing up database..."
 drush -y sql-dump --gzip --result-file=/var/mysql/backups/prior/dlnswclimatehub.sql --extra-dump=--no-tablespaces
-echo "completed!"
+echo "...completed!"
 # Backup web folder
 echo "Backing up files..."
 tar -czf /var/mysql/backups/prior/dlnswclimatehub_web.tar.gz /opt/drupal/web
-echo "completed!"
+echo "...completed!"
 
 # Rebuild drupal cache
 drush cr
