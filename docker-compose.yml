@@ -30,7 +30,6 @@ services:
       - ${CONTAINER_PREFIX}-drupal:/opt/drupal
       - ${CONTAINER_PREFIX}-drupal-data:/var/www/html
       - ./src-${CONTAINER_PREFIX}-mysql:/var/mysql/backups
-      - ./src-${CONTAINER_PREFIX}-drupal-sites:/var/www/html/sites
 
   webserver:
     image: nginx:1.21.3
@@ -44,28 +43,11 @@ services:
       - "${SITE_DOMAIN}:0.0.0.0"
       - "localhost:0.0.0.0"
     volumes:
-      - ${CONTAINER_PREFIX}-drupal-data:/var/www/html
       - ./nginx:/etc/nginx/conf.d
+      - ${CONTAINER_PREFIX}-drupal-data:/var/www/html
 #      - ${CONTAINER_PREFIX}-certbot-etc:/etc/letsencrypt
     networks:
       - external
-
-  vsftpd:
-    image: fauria/vsftpd:latest
-    container_name: ${CONTAINER_PREFIX}-vsftpd
-    depends_on:
-      - drupal
-    restart: unless-stopped
-    env_file:
-      - .env
-    extra_hosts:
-      - "vsftpd:0.0.0.0"
-    volumes:
-      - /var/app/ftp:/home/vsftpd
-      - /var/log/ftp:/var/log/vsftpd
-    networks:
-      - internal
-#      - external
 
   composer:
     image: composer:2.2.6
@@ -114,4 +96,3 @@ networks:
 volumes:
   dln-drupal:
   dln-drupal-data:
-  src-dln-drupal-sites:

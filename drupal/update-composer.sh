@@ -38,8 +38,6 @@ composer require -w drupal/tb_megamenu:^1.6 --ignore-platform-req=ext-gd --no-up
 composer require -w drupal/token:^1.10 --ignore-platform-req=ext-gd --no-update -q
 #composer require -w drupal/webform:^6.0 --ignore-platform-req=ext-gd --no-update -q
 composer update --ignore-platform-req=ext-gd
-# Update Drupal core
-composer update drupal/core -W drupal/core-* --ignore-platform-req=ext-gd
 # Clear composer cache
 composer clearcache
 # Allow plugins to silence trust composer messages

@@ -15,6 +15,27 @@ COPY ./drupal/update-drush.sh /opt/drupal
 # Copy script used to fix drupal filesystem permissions
 COPY ./drupal/fix-permissions.sh /opt/drupal/web
 
+# Copy dln.swclimatehub.info site folder contents to sites/default
+COPY ./src-dln-drupal-sites/default/ /opt/drupal/web/sites/default
+
+# Delete private folder under site folder which will be moved outside of docroot later
+RUN rm -rf /opt/drupal/web/default/private
+
+# Create libraries folder
+RUN mkdir /opt/drupal/web/libraries
+
+# Create private folders
+RUN mkdir /opt/drupal/private
+RUN mkdir /opt/drupal/private/config
+RUN mkdir /opt/drupal/private/config/sync
+RUN mkdir /opt/drupal/private/files
+RUN mkdir /opt/drupal/private/temp
+
+# Copy .htaccess files and private/files folder contents
+COPY ./src-dln-drupal-sites/default/private/config/sync/.htaccess /opt/drupal/private/config/sync
+COPY ./src-dln-drupal-sites/default/private/temp/.htaccess /opt/drupal/private/temp
+COPY ./src-dln-drupal-sites/default/private/files/ /opt/drupal/private/files
+
 # Set filesystem permissions for sites folder and contents
 RUN /opt/drupal/web/fix-permissions.sh
 
