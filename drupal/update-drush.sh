@@ -17,7 +17,7 @@ composer require drupal/superfish:^1.4
 composer clearcache
 
 # Set Drupal website filesystem permissions
-/opt/drupal/web/fix-permissions.sh
+bash /opt/drupal/web/fix-permissions.sh
 
 # Change directory to site folder
 cd /opt/drupal/web/sites/default
