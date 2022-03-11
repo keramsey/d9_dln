@@ -35,7 +35,7 @@ COPY ./src-dln-private/temp/.htaccess /opt/drupal/private/temp
 COPY ./src-dln-private/files/ /opt/drupal/private/files
 
 # Set filesystem permissions for sites folder and contents
-RUN /opt/drupal/web/fix-permissions.sh
+RUN bash /opt/drupal/web/fix-permissions.sh
 
 # Alternate entrypoint script for debugging container that will keep container running
 #ENTRYPOINT ["tail", "-f", "/dev/null"]
