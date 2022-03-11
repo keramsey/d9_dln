@@ -16,7 +16,7 @@ COPY ./drupal/update-drush.sh /opt/drupal
 COPY ./drupal/fix-permissions.sh /opt/drupal/web
 
 # Copy dln.swclimatehub.info site folder contents to sites/default
-COPY ./src-dln-drupal-sites/default/ /opt/drupal/web/sites/default
+COPY ./src-dln-site/default/ /opt/drupal/web/sites/default
 
 # Create libraries folder
 RUN mkdir /opt/drupal/web/libraries
@@ -30,9 +30,9 @@ RUN mkdir /opt/drupal/private/temp
 
 # Copy .htaccess files and private/files folder contents but not configuration or temp files
 #COPY .src-dln-drupal-private/ /opt/drupal/private
-COPY ./src-dln-drupal-private/config/sync/.htaccess /opt/drupal/private/config/sync
-COPY ./src-dln-drupal-private/temp/.htaccess /opt/drupal/private/temp
-COPY ./src-dln-drupal-private/files/ /opt/drupal/private/files
+COPY ./src-dln-private/config/sync/.htaccess /opt/drupal/private/config/sync
+COPY ./src-dln-private/temp/.htaccess /opt/drupal/private/temp
+COPY ./src-dln-private/files/ /opt/drupal/private/files
 
 # Set filesystem permissions for sites folder and contents
 RUN /opt/drupal/web/fix-permissions.sh

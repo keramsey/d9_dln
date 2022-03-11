@@ -69,6 +69,10 @@ drush cr
 
 # Export configuration
 drush -y config:export
+# Remove duplicate config yml files, then import config to delete from database
+#find . -type f -regex '.*_[2|3|4]\.yml' -exec bash rm -f {} \;
+# Import configuration
+#drush -y config:import
 # Export Drupal database to compressed file (--gzip appends .gz to file extension)
 echo "Backing up database..."
 drush -y sql-dump --gzip --result-file=/var/mysql/backups/latest/dlnswclimatehub.sql --extra-dump=--no-tablespaces
