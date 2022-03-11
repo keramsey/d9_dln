@@ -51,6 +51,7 @@ echo "...completed!"
 # Backup web folder
 echo "Backing up files..."
 tar -czf /var/mysql/backups/prior/dlnswclimatehub_web.tar.gz /opt/drupal/web
+tar -czf /var/mysql/backups/latest/dlnswclimatehub_private.tar.gz /opt/drupal/private
 echo "...completed!"
 
 # Rebuild drupal cache
@@ -80,6 +81,7 @@ echo "...completed!"
 # Backup web folder
 echo "Backing up files..."
 tar -czf /var/mysql/backups/latest/dlnswclimatehub_web.tar.gz /opt/drupal/web
+tar -czf /var/mysql/backups/latest/dlnswclimatehub_private.tar.gz /opt/drupal/private
 echo "...completed!"
 # Take website out of maintenance mode
 drush state:set system.maintenance_mode 0

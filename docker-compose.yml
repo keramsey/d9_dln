@@ -89,7 +89,7 @@ services:
     ports:
       - 8081:80
     networks:
-#      - internal
+      - internal
       - external
 
 networks:
