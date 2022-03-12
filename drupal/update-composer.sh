@@ -18,7 +18,7 @@ composer require -w drupal/bibcite:^2.0@beta drupal/bibcite_entity:^2.0@beta dru
 composer require -w drupal/admin_toolbar:^3.1 --ignore-platform-req=ext-gd --no-update -q
 composer require -w drupal/ckeditor_responsive_plugin:^2.0 --ignore-platform-req=ext-gd --no-update -q
 composer require -w drupal/download_count:^2.0 --ignore-platform-req=ext-gd --no-update -q
-#composer require -W drupal/drupal8_zymphonies_theme:^2.0 --ignore-platform-req=ext-gd --no-update -q
+composer require -W drupal/drupal8_zymphonies_theme:^2.0 --ignore-platform-req=ext-gd --no-update -q
 composer require -w drupal/easy_breadcrumb:^2.0 --ignore-platform-req=ext-gd --no-update -q
 composer require -w drupal/editor_advanced_link:^2.0 --ignore-platform-req=ext-gd --no-update -q
 composer require -w drupal/entity:^1.2 --ignore-platform-req=ext-gd --no-update -q

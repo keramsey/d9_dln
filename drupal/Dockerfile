@@ -4,6 +4,7 @@ FROM drupal:9.3.7-php8.0-apache-bullseye
 #  - MySQL client and zup are needed for drush to export database dumps
 RUN apt-get update \
   && apt-get install zip -y \
+  && apt-get install wget -y \
   && apt-get install default-mysql-client -y
 
 # Copy script used to update drupal using composer
