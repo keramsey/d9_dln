@@ -26,7 +26,7 @@ cd /opt/drupal/web/sites/default
 drush cr
 
 # Uninstall nice_menus theme (not supported in Drupal 9)
-drush -y pm:uninstall nice_menus
+#drush -y pm:uninstall nice_menus
 
 # Uninstall dust_bartik subtheme (not supported in Drupal 9)
 #drush -y pm:uninstall dust_bartik
