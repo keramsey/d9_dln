@@ -2,7 +2,7 @@ version: "3.9"
 services:
   mysql:
     build:
-      context: .
+      context: ..
       dockerfile: mysql/Dockerfile
     container_name: ${CONTAINER_PREFIX}-mysql
     security_opt:
