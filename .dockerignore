@@ -1,3 +1,5 @@
 .env
 .git
 trash
+src-*
+d9-dln-k8s.yml
