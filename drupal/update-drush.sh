@@ -20,7 +20,7 @@ composer clearcache
 bash /opt/drupal/web/fix-permissions.sh
 
 # Patch drupal8_zymphonies_theme.theme file (version 2.02)
-cd /opt/drupal/web//themes/contrib/drupal8_zymphonies_theme
+cd /opt/drupal/web/themes/contrib/drupal8_zymphonies_theme
 wget https://www.drupal.org/files/issues/2020-11-27/3185149-syntax-error-3.patch
 patch -p1 < 3185149-syntax-error-3.patch
 
