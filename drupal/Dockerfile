@@ -1,4 +1,4 @@
-FROM drupal:9.3.7-php8.0-apache-bullseye
+FROM drupal:9.3.12-php8.0-apache-bullseye
 
 # Install system packages
 #  - MySQL client and zup are needed for drush to export database dumps
