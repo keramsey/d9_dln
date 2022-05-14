@@ -34,7 +34,7 @@ drush cr
 #drush -y pm:uninstall nice_menus
 
 # Uninstall dust_bartik subtheme (not supported in Drupal 9)
-#drush -y pm:uninstall dust_bartik
+drush -y pm:uninstall dust_bartik
 
 # Install drupal8_zymphonies_theme theme (base theme)
 drush -y theme-enable drupal8_zymphonies_theme
