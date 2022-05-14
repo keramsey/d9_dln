@@ -15,7 +15,7 @@ services:
     networks:
       - internal
     volumes:
-      - /src-dln-mysql:/docker-entrypoint-initdb.d
+      - ./src-dln-mysql:/docker-entrypoint-initdb.d
 
   drupal:
     build:
@@ -89,7 +89,7 @@ services:
     extra_hosts:
       - "dln.swclimatehub.info:0.0.0.0"
     ports:
-      - 8081:80
+      - 8085:80
     networks:
       - internal
       - external
